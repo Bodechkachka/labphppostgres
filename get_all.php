@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// Подключение
+// Подключаемся к PostgreSQL
 $host = getenv('PGHOST');
 $port = getenv('PGPORT');
 $dbname = getenv('PGDATABASE');
@@ -13,7 +13,7 @@ $conn = pg_connect($conn_string);
 
 if (!$conn) {
     http_response_code(500);
-    echo json_encode(["error" => "Ошибка подключения к базе"]);
+    echo json_encode(["error" => "Ошибка подключения к базе"], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -25,12 +25,10 @@ $result = pg_query($conn, $query);
 $data = [];
 if ($result) {
     while ($row = pg_fetch_assoc($result)) {
-        $data[] = array_map('utf8_encode', $row);
+        $data[] = $row;
     }
 }
 
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
-pg_free_result($result);
-pg_close($conn);
-?>
+pg_free_
