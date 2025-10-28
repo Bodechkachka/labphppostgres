@@ -1,11 +1,14 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
+
+// Подключение
 $host = getenv('PGHOST');
 $port = getenv('PGPORT');
 $dbname = getenv('PGDATABASE');
 $user = getenv('PGUSER');
 $password = getenv('PGPASSWORD');
 
-$conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
+$conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password sslmode=require";
 $conn = pg_connect($conn_string);
 
 if (!$conn) {
@@ -22,12 +25,11 @@ $result = pg_query($conn, $query);
 $data = [];
 if ($result) {
     while ($row = pg_fetch_assoc($result)) {
-        $data[] = $row;
+        $data[] = array_map('utf8_encode', $row);
     }
 }
 
-header('Content-Type: application/json');
-echo json_encode($data);
+echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 pg_free_result($result);
 pg_close($conn);
