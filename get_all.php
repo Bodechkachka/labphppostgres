@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-// Подключаемся к PostgreSQL
+// Подключение
 $host = getenv('PGHOST');
 $port = getenv('PGPORT');
 $dbname = getenv('PGDATABASE');
@@ -31,4 +31,6 @@ if ($result) {
 
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
-pg_free_
+pg_free_result($result);
+pg_close($conn);
+?>
